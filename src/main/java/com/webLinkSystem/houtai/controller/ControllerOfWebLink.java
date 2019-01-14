@@ -17,11 +17,17 @@ public class ControllerOfWebLink {
     @Autowired
     private ServiceOfWebLink serviceOfWebLink;
 
-    @GetMapping(value = "/findAllweblink")
-    private List<WebLink> findAllweblink() {
-        List<WebLink> list = serviceOfWebLink.findAllOrderByCreateTimeDesc();
+    @RequestMapping(value = "/findAllweblink", method = RequestMethod.POST)
+    private List<WebLink> findAllweblink(@RequestParam Map<String, String> reqMap) {
+        String productName =reqMap.get("productName");
+        productName = "%"+productName+"%";
+        List<WebLink> list = serviceOfWebLink.findAllOrderByCreateTimeDesc(productName);
         return list;
     }
+
+
+
+
     @RequestMapping(value = "/findWeblinkByGiud" , method = RequestMethod.POST)
     private String findWeblinkByGiud(@RequestParam Map<String, String> reqMap) {
         String guid = reqMap.get("guid");
@@ -43,16 +49,16 @@ public class ControllerOfWebLink {
 
     @RequestMapping(value = "/insertWeblink" , method = RequestMethod.POST)
     private String insertWeblink(@RequestParam Map<String, String> reqMap) {
-        String prudoctName = reqMap.get("prudoctName");
+        String productName = reqMap.get("productName");
         String weblink = reqMap.get("weblink");
         String flag = "";
         //首先检查是否有该产品，如果有则返回已有
-        List<WebLink> list = serviceOfWebLink.findByProductName(prudoctName);
+        List<WebLink> list = serviceOfWebLink.findByProductName(productName);
         if (list.size() == 0) {
             WebLink webLink = new WebLink();
             webLink.setGuid(UUID.randomUUID().toString());
             webLink.setCreateTime(new Timestamp(System.currentTimeMillis()));
-            webLink.setProductName(prudoctName);
+            webLink.setProductName(productName);
             webLink.setState(1);
             webLink.setSourceWebLink(weblink);
             serviceOfWebLink.save(webLink);
