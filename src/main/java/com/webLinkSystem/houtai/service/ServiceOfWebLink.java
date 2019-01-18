@@ -13,5 +13,5 @@ public interface ServiceOfWebLink extends JpaRepository<WebLink, String> {
 
     List<WebLink> findByProductName(String prudoctName);
 
-    List<WebLink> findByGuid(String guid);
+    List<WebLink> findByGuid(Integer guid);
 }

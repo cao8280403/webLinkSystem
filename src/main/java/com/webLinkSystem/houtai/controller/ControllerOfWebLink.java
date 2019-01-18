@@ -30,7 +30,7 @@ public class ControllerOfWebLink {
 
     @RequestMapping(value = "/findWeblinkByGiud" , method = RequestMethod.POST)
     private String findWeblinkByGiud(@RequestParam Map<String, String> reqMap) {
-        String guid = reqMap.get("guid");
+        Integer guid = Integer.valueOf(reqMap.get("guid"));
         String flag = "";
         List<WebLink> list = serviceOfWebLink.findByGuid(guid);
         if(list.size()==0){
@@ -56,7 +56,7 @@ public class ControllerOfWebLink {
         List<WebLink> list = serviceOfWebLink.findByProductName(productName);
         if (list.size() == 0) {
             WebLink webLink = new WebLink();
-            webLink.setGuid(UUID.randomUUID().toString());
+//            webLink.setGuid(UUID.randomUUID().toString());
             webLink.setCreateTime(new Timestamp(System.currentTimeMillis()));
             webLink.setProductName(productName);
             webLink.setState(1);
@@ -72,7 +72,7 @@ public class ControllerOfWebLink {
     //改变状态或者网址
     @RequestMapping(value = "/updateWeblink" , method = RequestMethod.POST)
     private String updateWeblink(@RequestParam Map<String, String> reqMap) {
-        String guid= reqMap.get("guid");
+        Integer guid= Integer.valueOf(reqMap.get("guid"));
         String weblink= reqMap.get("weblink");
         String state= reqMap.get("state");
         String flag = "";
