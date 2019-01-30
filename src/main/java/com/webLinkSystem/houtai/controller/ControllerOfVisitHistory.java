@@ -1,5 +1,6 @@
 package com.webLinkSystem.houtai.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.webLinkSystem.houtai.bean.VisitHistory;
 import com.webLinkSystem.houtai.service.ServiceOfVisitHistory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,24 +26,21 @@ public class ControllerOfVisitHistory {
 //        return list;
 //    }
 
-
-    @RequestMapping(value = "/findVisitHistoryByGiud", method = RequestMethod.POST)
-    private String findVisitHistoryByGiud(@RequestParam Map<String, String> reqMap) {
+    @ResponseBody
+    @RequestMapping(value = "/findVisitHistoryByGuid", method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    private String findVisitHistoryByGuid(@RequestParam Map<String, String> reqMap) {
         Integer guid = Integer.valueOf(reqMap.get("guid"));
+        String year = reqMap.get("year");
+        String month = reqMap.get("month");
         String flag = "";
-//        List<VisitHistory> list = serviceOfVisitHistory.findByGuid(guid);
-//        if(list.size()==0){
-//            flag = "此链接不存在";
-//        }else{
-//            Integer state = list.get(0).getState();
-//            String sourceVisitHistory = list.get(0).getSourceVisitHistory();
-//            if (state==1){
-//                flag = sourceVisitHistory;
-//            }else{
-//                flag = "此链接已关闭";
-//            }
-//        }
-        return flag;
+        List<Object> pvlist = serviceOfVisitHistory.findPV(guid,year,month);
+        List<Object> uvlist = serviceOfVisitHistory.findUV(guid,year,month);
+        JSONObject result = new JSONObject();
+        result.put("msg", "success");
+        result.put("method", "post");
+        result.put("pv", pvlist);
+        result.put("uv", uvlist);
+        return result.toJSONString();
     }
 
     @RequestMapping(value = "/insertVisitHistory", method = RequestMethod.POST)
