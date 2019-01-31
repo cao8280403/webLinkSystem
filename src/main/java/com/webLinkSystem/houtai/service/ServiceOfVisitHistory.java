@@ -30,6 +30,9 @@ public interface ServiceOfVisitHistory extends JpaRepository<VisitHistory, Strin
             "\tU.D",nativeQuery = true)
     List<Object> findUV(Integer guid, String year, String month);
 
+    @Query(value = "SELECT count(*) ,count(DISTINCT request_id) FROM visit_history WHERE create_time between ?1 and ?2",nativeQuery = true)
+    List<Object> findPVUV(String begin, String end);
+
 //    @Query(value = "SELECT * FROM web_link WHERE product_name LIKE ?1 ORDER BY create_time DESC ",nativeQuery = true)
 //    List<VisitHistory> findAllOrderByCreateTimeDesc(String productName);
 //

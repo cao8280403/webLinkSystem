@@ -2,6 +2,7 @@ package com.webLinkSystem.houtai.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.webLinkSystem.houtai.bean.WebLink;
+import com.webLinkSystem.houtai.service.ServiceOfVisitHistory;
 import com.webLinkSystem.houtai.service.ServiceOfWebLink;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,9 @@ public class ControllerOfWebLink {
     @Autowired
     private ServiceOfWebLink serviceOfWebLink;
 
+    @Autowired
+    private ServiceOfVisitHistory serviceOfVisitHistory;
+
     @ResponseBody
     @RequestMapping(value = "/findAllweblink", method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     private String findAllweblink(@RequestParam Map<String, String> reqMap) {
@@ -27,7 +31,7 @@ public class ControllerOfWebLink {
         int size = Integer.parseInt(reqMap.get("size"));
         page = page*size;
         productName = "%"+productName+"%";
-        List<WebLink> list = serviceOfWebLink.findAllOrderByCreateTimeDesc(productName,page,size);
+        List<Object> list = serviceOfWebLink.findAllOrderByCreateTimeDesc(productName,page,size);
         int count = serviceOfWebLink.findCount(productName);
         // 将获取的json数据封装一层，然后在给返回
         JSONObject result = new JSONObject();
@@ -143,5 +147,19 @@ public class ControllerOfWebLink {
             flag = "删除失败";
         }
         return flag;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/findPVUV", method = RequestMethod.POST,produces="application/json;charset=UTF-8")
+    private String findPVUV(@RequestParam Map<String, String> reqMap) {
+        String begin =reqMap.get("begin");
+        String end =reqMap.get("end");
+        List<Object> pvuv = serviceOfVisitHistory.findPVUV(begin, end);
+        // 将获取的json数据封装一层，然后在给返回
+        JSONObject result = new JSONObject();
+        result.put("msg", "success");
+        result.put("method", "post");
+        result.put("data", pvuv);
+        return result.toJSONString();
     }
 }
