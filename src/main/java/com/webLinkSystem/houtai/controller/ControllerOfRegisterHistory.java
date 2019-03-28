@@ -70,21 +70,23 @@ public class ControllerOfRegisterHistory {
         String productName = reqMap.get("productId");
         String name = reqMap.get("name");
         String telephone = reqMap.get("telephone");
+        String ip = reqMap.get("ip");
         String flag = "";
         //首先检查是否有该产品，如果有则返回已有
-//        List<WebLink> list = serviceOfWebLink.findByProductName(productName);
-//        if (list.size() == 0) {
-        RegisterHistory registerHistory = new RegisterHistory();
-        registerHistory.setGuid(UUID.randomUUID().toString());
-        registerHistory.setCreatetime(new Timestamp(System.currentTimeMillis()));
-        registerHistory.setProductName(productName);
-        registerHistory.setTelephone(telephone);
-        registerHistory.setName(name);
-        serviceOfRegisterHistory.save(registerHistory);
-        flag = "添加成功";
-//        } else {
-//            flag = "该产品已存在";
-//        }
+        List<RegisterHistory> list = serviceOfRegisterHistory.findByProductNameAndIp(productName, ip);
+        if (list.size() == 0 || list.size() == 1) {
+            RegisterHistory registerHistory = new RegisterHistory();
+            registerHistory.setGuid(UUID.randomUUID().toString());
+            registerHistory.setCreatetime(new Timestamp(System.currentTimeMillis()));
+            registerHistory.setProductName(productName);
+            registerHistory.setTelephone(telephone);
+            registerHistory.setIp(ip);
+            registerHistory.setName(name);
+            serviceOfRegisterHistory.save(registerHistory);
+            flag = "yes";
+        } else {
+            flag = "no";
+        }
         return flag;
     }
 }

@@ -11,6 +11,7 @@ public class RegisterHistory {
     private String name;
     private String telephone;
     private String productName;
+    private String ip;
 
     @Id
     @Column(name = "guid")
@@ -86,5 +87,15 @@ public class RegisterHistory {
         result = 31 * result + (telephone != null ? telephone.hashCode() : 0);
         result = 31 * result + (productName != null ? productName.hashCode() : 0);
         return result;
+    }
+
+    @Basic
+    @Column(name = "ip")
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
     }
 }
